@@ -1,0 +1,77 @@
+export default App; is used to export a single component.
+exporting a component means making it available for use in other files.
+importing a component means bringing it into another file to use it.
+
+what is useState?
+it manage local state within a component, the state can change which will 
+directly affect what is rendering and the ui will update accordingly
+
+what is useEffect?
+manages side effects operation that occur outside of rendering
+
+? : is called a ternary operator, short IF-ELSE.
+IF index - 1 is less than 0 → go to last song
+ELSE → index - 1
+
+Arrow function 
+it is a concise way to write function. it basically rplaces function keywords
+for example: Instead of 
+function add(a, b) {return a*b;}
+const multiply  (a, b) => a*b;
+
+Props (properties)
+data passed from parent to child component
+for example:
+Type "yellow" → onChange fires → 
+arrow function (e) => setSearch("yellow") →
+App state updates → SongList filters → "Yellow" appears! 
+
+How does the next and prev button is ACTUALLY working?
+
+the core logic is present in player.jsx where there is two arrow function 
+named prevsong and next song with desired condition to set currentsongindex
+
+The WorkFlow :
+1. Click Next or Prev → calls nextSong() or prevSong()
+2. Updates 'currentSongIndex' state (in App.jsx)
+3. Player re-renders → shows new song with its appropriate title,artist and cover
+4. useEffect in Player.jsx runs (because currentSongIndex changed)
+5. `<audio src={songs[currentSongIndex].src}>` in App.jsx updates src (audio will also change)
+6. `audioRef.current.play()` executes → new song plays
+
+how we are sble to search the song in search bar?
+
+function SearchBar({ search, setSearch }) // ← These are PROPS (data passed from parent)
+
+search and setSearch are props from App.jsx, not function parameters
+App passes them: <SearchBar search={search} setSearch={setSearch} />
+
+we are creating two props in app.jsx to use in searchbar.jsx
+
+The WorkFlow:
+App.jsx state: const [search, setSearch] = useState("");  ← Master state
+
+↓ Passes to SearchBar as props
+
+SearchBar.jsx:
+<input 
+  value={search}                    ← Controlled input (shows state)
+  onChange={(e) => setSearch(e.target.value)}  ← Updates state on type
+/>
+
+↓ setSearch() updates App's search state
+
+App.jsx SongList:
+songs={songs.filter(song => 
+  song.title.toLowerCase().includes(search.toLowerCase())
+)}  ← Filters songs instantly!
+
+For example WorkFlow
+// What happens when you type "yellow":
+1. onChange fires → e = {target: {value: "yellow"}}
+2. Arrow function: (e) => setSearch(e.target.value)
+3. e.target.value = "yellow" 
+4. setSearch("yellow") ← Updates App state
+5. App re-renders → SongList gets filtered songs
+6. Only "Yellow" by Coldplay shows!
+
